@@ -1,8 +1,27 @@
 # k8s-hello-world-builder
 
-## Run hello-world app as a docker container
+## Run hello-world app as a docker container for testing
 
 ```bash
-docker build --tag hello-world .
+docker build -f ./hello-world.Dockerfile -t hello-world .
 docker run -p 5000:5000 hello-world
+```
+
+## Push to registry for access from kubernetes deployment
+
+```bash
+docker image tag hello-world dankinah/hello-world:latest
+docker image push dankinah/hello-world:latest
+
+docker build -f ./builder.Dockerfile -t builder .
+docker image tag builder dankinah/builder:latest
+docker image push dankinah/builder:latest
+```
+
+## Launch kubernetes deployment and service
+
+```bash
+kubectl apply -f hello-world-deployment.yml
+kubectl apply -f hello-world-service.yml
+
 ```

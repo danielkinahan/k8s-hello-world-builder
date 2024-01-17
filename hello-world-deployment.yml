@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-world
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      initContainers:
+      - name: builder
+        image: dankinah/builder:latest
+        command: ["/bin/sh", "-c", "git clone https://github.com/danielkinahan/k8s-hello-world-builder.git && cd k8s-hello-world-builder && docker build -f ./hello-world.Dockerfile -t hello-world ."]
+        securityContext:
+          privileged: true
+      containers:
+      - name: hello-world
+        image: hello-world:latest
+        ports:
+        - containerPort: 8080
