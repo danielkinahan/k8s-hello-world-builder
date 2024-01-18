@@ -32,6 +32,12 @@ kubectl apply -f hello-world-service.yml
 
 ```
 
+## Check deployment logs
+
+```bash
+kubectl logs hello-world-deployment -c hello-world
+```
+
 ## Destroy deployment and service
 
 ```bash
