@@ -3,27 +3,27 @@ kind: Pod
 metadata:
   name: kaniko
 spec:
-  containers:
+  initContainers:
   - name: kaniko
     image: gcr.io/kaniko-project/executor:latest
     args: 
-    - "--git=https://github.com/danielkinahan/k8s-hello-world-builder.git"
-    - "--dockerfile=/workspace/dockerfile"
-    - "--context=dir://workspace"
-    - "--destination=dankinah/kaniko-test:latest"
+    - "--context=git://github.com/danielkinahan/k8s-hello-world-builder.git"
+    # - "--tar-path=/workspace/hello-world.tar"
+    # - "--no-push"
+    - "--destination=host.minikube.internal:5000/hello-world:latest"
+    - "--skip-tls-verify"
     volumeMounts:
-      - name: kaniko-secret
-        mountPath: /kaniko/.docker
       - name: dockerfile-storage
         mountPath: /workspace
+
+  containers:
+  - name: hello-world
+    image: hello-world:latest
+    ports:
+    - containerPort: 80
   restartPolicy: Never
+
   volumes:
-    - name: kaniko-secret
-      secret:
-        secretName: regcred
-        items:
-          - key: .dockerconfigjson
-            path: config.json
     - name: dockerfile-storage
       persistentVolumeClaim:
         claimName: dockerfile-claim
