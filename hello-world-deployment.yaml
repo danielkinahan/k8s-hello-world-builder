@@ -14,7 +14,7 @@ spec:
     spec:
       initContainers:
         - name: builder
-          image: dankinah/builder
+          image: dankinah/builder:0.1.0
           command: ["/bin/sh", "-c", "git clone https://github.com/danielkinahan/k8s-hello-world-builder.git && cd k8s-hello-world-builder && docker build -f hello-world.Dockerfile -t hello-world-dankinah:latest ."]
           volumeMounts:
           - mountPath: /var/run/docker.sock
