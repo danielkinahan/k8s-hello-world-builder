@@ -18,10 +18,23 @@ docker image tag builder dankinah/builder:latest
 docker image push dankinah/builder:latest
 ```
 
+## Test image for building capabilites
+
+```bash
+/bin/sh -c "git clone https://github.com/danielkinahan/k8s-hello-world-builder.git && cd k8s-hello-world-builder && docker build -f ./hello-world.Dockerfile -t hello-world ."
+```
+
 ## Launch kubernetes deployment and service
 
 ```bash
 kubectl apply -f hello-world-deployment.yml
 kubectl apply -f hello-world-service.yml
 
+```
+
+## Destroy deployment and service
+
+```bash
+kubectl delete deployments hello-world-deployment
+kubectl delete svc hello-world-service
 ```
