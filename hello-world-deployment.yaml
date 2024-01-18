@@ -15,7 +15,7 @@ spec:
       initContainers:
         - name: builder
           image: dankinah/builder
-          command: ["/bin/sh", "-c", "git clone https://github.com/danielkinahan/k8s-hello-world-builder.git && cd k8s-hello-world-builder && docker build -f hello-world.Dockerfile -t hello-world:latest ."]
+          command: ["/bin/sh", "-c", "git clone https://github.com/danielkinahan/k8s-hello-world-builder.git && cd k8s-hello-world-builder && docker build -f hello-world.Dockerfile -t hello-world-dankinah:latest ."]
           volumeMounts:
           - mountPath: /var/run/docker.sock
             name: docker-socket-volume
@@ -23,7 +23,8 @@ spec:
             privileged: true
       containers:
         - name: hello-world
-          image: hello-world:latest
+          image: hello-world-dankinah:latest
+          imagePullPolicy: Never
           ports:
           - containerPort: 80
       volumes:
