@@ -38,9 +38,10 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
+  
 
 service:
-  type: ClusterIP
+  type: NodePort
   port: 80
 
 ingress:
@@ -79,17 +80,15 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
-volumes: []
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
+volumes:
+  - name: docker-socket-volume
+    hostPath:
+      path: /var/run/docker.sock
 
 # Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
+volumeMounts:
+  - name: docker-socket-volume
+    mountPath: /var/run/docker.sock
 
 nodeSelector: {}
 

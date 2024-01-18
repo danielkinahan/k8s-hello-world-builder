@@ -1,3 +1,5 @@
+# templates/deployment.yaml
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -30,12 +32,22 @@ spec:
       serviceAccountName: {{ include "k8s-hello-world-builder.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+      initContainers:
+        - name: builder
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/bin/sh", "-c", "git clone https://github.com/danielkinahan/k8s-hello-world-builder.git && cd k8s-hello-world-builder && docker build -f hello-world.Dockerfile -t hello-world-dankinah:latest ."]
+          volumeMounts:
+            - mountPath: /var/run/docker.sock
+              name: docker-socket-volume
+          securityContext:
+            privileged: true
+      containers:
+        - name: {{ .Chart.Name }}
+          image: hello-world-dankinah:latest
+          imagePullPolicy: Never
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}

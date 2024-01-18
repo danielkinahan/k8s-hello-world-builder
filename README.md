@@ -26,6 +26,12 @@ k8s-hello-world-builder is an example of how one could build an image from a Doc
 helm install k8s-hello-world-builder-release ./k8s-hello-world-builder
 ```
 
+### Expose the service
+
+```bash
+minikube service k8s-hello-world-builder-release
+```
+
 ## Development
 
 ### Run hello-world app as a docker container for testing
